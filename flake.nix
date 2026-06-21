@@ -17,72 +17,34 @@
 
       perSystem = { pkgs, ... }:
         let
-          phpBase = pkgs.php;
-          php = phpBase.buildEnv {
-            extensions = { enabled, all }:
-              enabled ++ (with all; [
-                mbstring
-                xml
-                dom
-                curl
-                zip
-                openssl
-                tokenizer
-                fileinfo
-                pdo
-                intl
-              ]);
-            extraConfig = ''
-              memory_limit = 512M
-            '';
-          };
-
           mkdocsWithMaterial = pkgs.python313.withPackages (ps: [
             ps.mkdocs-material
           ]);
         in
         {
-          devShells = {
-            default = pkgs.mkShell {
-              name = "docsdog-php";
+          devShells.default = pkgs.mkShell {
+            name = "docsdog-docs";
 
-              buildInputs = [
-                php
-                phpBase.packages.composer
-              ];
+            buildInputs = [
+              mkdocsWithMaterial
+            ];
 
-              shellHook = ''
-                echo "🐕   Docs Dog — PHP Development Environment"
-                echo "      PHP:      $(php --version | head -1)"
-                echo "      Composer: $(composer --version 2>/dev/null | head -1)"
-                echo ""
-              '';
-            };
+            shellHook = ''
+              # Prepare docs directory with symlinks to spec files and assets
+              ln -sf ../../docsdog-spec/specification.md mkdocs/docs/specification.md
+              ln -sf ../../docsdog-spec/scan.schema.json mkdocs/docs/scan.schema.json
+              ln -sf ../../docsdog-spec/relationship.schema.json mkdocs/docs/relationship.schema.json
+              ln -sf ../../docsdog-spec/scan-example.json mkdocs/docs/scan-example.json
+              ln -sf ../../assets mkdocs/docs/assets
 
-            docs = pkgs.mkShell {
-              name = "docsdog-docs";
-
-              buildInputs = [
-                mkdocsWithMaterial
-              ];
-
-              shellHook = ''
-                # Prepare docs directory with symlinks to spec files and assets
-                ln -sf ../docsdog-spec/specification.md docs/specification.md
-                ln -sf ../docsdog-spec/scan.schema.json docs/scan.schema.json
-                ln -sf ../docsdog-spec/relationship.schema.json docs/relationship.schema.json
-                ln -sf ../docsdog-spec/scan-example.json docs/scan-example.json
-                ln -sf ../assets docs/assets
-
-                echo "🐕   Docs Dog — Documentation Environment"
-                echo "      mkdocs:   $(mkdocs --version)"
-                echo ""
-                echo "  Commands:"
-                echo "    mkdocs serve    Start live-reloading docs server"
-                echo "    mkdocs build    Build static site"
-                echo ""
-              '';
-            };
+              echo "🐕   Docs Dog — Documentation Environment"
+              echo "      mkdocs:   $(mkdocs --version)"
+              echo ""
+              echo "  Commands:"
+              echo "    mkdocs serve -f mkdocs/mkdocs.yml    Start live-reloading docs server"
+              echo "    mkdocs build -f mkdocs/mkdocs.yml    Build static site"
+              echo ""
+            '';
           };
 
           packages.docs = pkgs.stdenv.mkDerivation {
@@ -94,14 +56,14 @@
             ];
 
             buildPhase = ''
-              # Copy external files into docs/ so mkdocs can find them
-              cp docsdog-spec/specification.md docs/
-              cp docsdog-spec/scan.schema.json docs/
-              cp docsdog-spec/relationship.schema.json docs/
-              cp docsdog-spec/scan-example.json docs/
-              cp -r assets docs/
+              # Copy external files into mkdocs/docs/ so mkdocs can find them
+              cp docsdog-spec/specification.md mkdocs/docs/
+              cp docsdog-spec/scan.schema.json mkdocs/docs/
+              cp docsdog-spec/relationship.schema.json mkdocs/docs/
+              cp docsdog-spec/scan-example.json mkdocs/docs/
+              cp -r assets mkdocs/docs/
 
-              mkdocs build --strict --site-dir $out
+              mkdocs build -f mkdocs/mkdocs.yml --strict --site-dir $out
             '';
 
             # mkdocs build already writes to --site-dir, nothing to install
