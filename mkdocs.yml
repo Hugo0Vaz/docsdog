@@ -40,23 +40,15 @@ markdown_extensions:
   - toc:
       permalink: true
 
-docs_dir: .
-
-exclude_docs: |
-  flake.nix
-  flake.lock
-  .git/
-  .gitignore
-  .gitattributes
-  docsdog-php/
+docs_dir: docs
 
 nav:
-  - Home: README.md
-  - Specification: docsdog-spec/specification.md
+  - Home: index.md
+  - Specification: specification.md
   - Schemas:
-      - Scan Schema: docsdog-spec/scan.schema.json
-      - Relationship Schema: docsdog-spec/relationship.schema.json
-      - Scan Example: docsdog-spec/scan-example.json
+      - Scan Schema: scan.schema.json
+      - Relationship Schema: relationship.schema.json
+      - Scan Example: scan-example.json
 
 plugins:
   - search
