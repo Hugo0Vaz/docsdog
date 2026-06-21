@@ -56,17 +56,19 @@
             ];
 
             buildPhase = ''
-              # Copy external files into mkdocs/docs/ so mkdocs can find them
+              # Nix resolves committed symlinks during store copy, making source
+              # and dest the same file — cp fails. Wipe and recreate the dir.
+              rm -rf mkdocs/docs/
+              mkdir -p mkdocs/docs/
               cp docsdog-spec/specification.md mkdocs/docs/
               cp docsdog-spec/scan.schema.json mkdocs/docs/
               cp docsdog-spec/relationship.schema.json mkdocs/docs/
               cp docsdog-spec/scan-example.json mkdocs/docs/
               cp -r assets mkdocs/docs/
+              cp ${./mkdocs/docs/index.md} mkdocs/docs/index.md
 
               mkdocs build -f mkdocs/mkdocs.yml --strict --site-dir $out
             '';
-
-            # mkdocs build already writes to --site-dir, nothing to install
             dontInstall = true;
           };
         };
