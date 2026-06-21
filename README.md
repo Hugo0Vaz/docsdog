@@ -83,12 +83,12 @@ Each relationship may carry arbitrary key-value metadata:
 
 ## Implementations
 
-| Language   | Package                                                         |
-|------------|-----------------------------------------------------------------|
-| PHP        | [docsdog/docsdog-php](docsdog-php/)                             |
+| Language | Repo                                                         |
+|----------|--------------------------------------------------------------|
+| PHP      | [Hugo0Vaz/docsdog-php](https://github.com/Hugo0Vaz/docsdog-php) |
 
 Language-specific docs (installation, annotation syntax, CLI usage) live in each
-implementation's own README.
+implementation's own repository.
 
 ## Specification
 
