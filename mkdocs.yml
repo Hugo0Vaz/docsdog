@@ -1,0 +1,62 @@
+site_name: DocsDog
+site_description: Open specification for expressing semantic relationships between source code and external artifacts
+site_author: Hugo0Vaz
+repo_url: https://github.com/Hugo0Vaz/docsdog
+repo_name: Hugo0Vaz/docsdog
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+
+docs_dir: .
+
+exclude_docs: |
+  flake.nix
+  flake.lock
+  .git/
+  .gitignore
+  .gitattributes
+  docsdog-php/
+
+nav:
+  - Home: README.md
+  - Specification: docsdog-spec/specification.md
+  - Schemas:
+      - Scan Schema: docsdog-spec/scan.schema.json
+      - Relationship Schema: docsdog-spec/relationship.schema.json
+      - Scan Example: docsdog-spec/scan-example.json
+
+plugins:
+  - search

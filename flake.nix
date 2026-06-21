@@ -36,22 +36,62 @@
               memory_limit = 512M
             '';
           };
+
+          mkdocsWithMaterial = pkgs.python313.withPackages (ps: [
+            ps.mkdocs-material
+          ]);
         in
         {
-          devShells.default = pkgs.mkShell {
-            name = "docsdog-php";
+          devShells = {
+            default = pkgs.mkShell {
+              name = "docsdog-php";
 
-            buildInputs = [
-              php
-              phpBase.packages.composer
+              buildInputs = [
+                php
+                phpBase.packages.composer
+              ];
+
+              shellHook = ''
+                echo "🐕   Docs Dog — PHP Development Environment"
+                echo "      PHP:      $(php --version | head -1)"
+                echo "      Composer: $(composer --version 2>/dev/null | head -1)"
+                echo ""
+              '';
+            };
+
+            docs = pkgs.mkShell {
+              name = "docsdog-docs";
+
+              buildInputs = [
+                mkdocsWithMaterial
+              ];
+
+              shellHook = ''
+                echo "🐕   Docs Dog — Documentation Environment"
+                echo "      mkdocs:   $(mkdocs --version)"
+                echo ""
+                echo "  Commands:"
+                echo "    mkdocs serve    Start live-reloading docs server"
+                echo "    mkdocs build    Build static site"
+                echo ""
+              '';
+            };
+          };
+
+          packages.docs = pkgs.stdenv.mkDerivation {
+            name = "docsdog-docs";
+            src = ./.;
+
+            nativeBuildInputs = [
+              mkdocsWithMaterial
             ];
 
-            shellHook = ''
-              echo "🐕   Docs Dog — PHP Development Environment"
-              echo "      PHP:      $(php --version | head -1)"
-              echo "      Composer: $(composer --version 2>/dev/null | head -1)"
-              echo ""
+            buildPhase = ''
+              mkdocs build --strict --site-dir $out
             '';
+
+            # mkdocs build already writes to --site-dir, nothing to install
+            dontInstall = true;
           };
         };
     };
