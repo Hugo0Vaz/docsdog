@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docdog.dev/schema/relationship.schema.json",
+  "title": "Docdog Relationship",
+
+  "type": "object",
+
+  "additionalProperties": false,
+
+  "required": [
+    "source",
+    "predicate",
+    "target"
+  ],
+
+  "properties": {
+
+    "source": {
+      "$ref": "#/$defs/sourceIdentifier"
+    },
+
+    "predicate": {
+      "type": "string",
+      "description": "Semantic relationship.",
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+
+    "target": {
+      "$ref": "#/$defs/targetIdentifier"
+    }
+
+  },
+
+  "$defs": {
+
+    "sourceIdentifier": {
+      "type": "string",
+      "description": "Source code location.",
+
+      "examples": [
+        "php://src/Application/CreateInvoiceService.php#L42",
+        "php://src/Application/CreateInvoiceService.php#L42:C15",
+        "java://src/main/UserService.java#L88",
+        "typescript://src/auth/login.ts#L17",
+        "rust://src/payment.rs#L51"
+      ],
+
+      "pattern": "^[a-z][a-z0-9+.-]*://.+#L[0-9]+(:C[0-9]+)?$"
+    },
+
+    "targetIdentifier": {
+      "type": "string",
+
+      "description": "URI-like identifier for an external artifact.",
+
+      "examples": [
+        "docdog:usecase:UC-001",
+        "docdog:requirement:REQ-014",
+        "docdog:adr:ADR-004",
+        "docdog:event:InvoiceCreated",
+        "jira:ERP-123",
+        "github:company/project#15"
+      ],
+
+      "pattern": "^[a-z][a-z0-9-]*:[a-z][a-z0-9-]*:.+$"
+    }
+
+  }
+}

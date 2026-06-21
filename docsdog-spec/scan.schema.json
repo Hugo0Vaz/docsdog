@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docref.dev/schema/scan.schema.json",
+  "title": "DocRef Scan",
+
+  "type": "object",
+
+  "additionalProperties": false,
+
+  "required": [
+    "version",
+    "relationships"
+  ],
+
+  "properties": {
+
+    "version": {
+      "type": "string"
+    },
+
+    "relationships": {
+
+      "type": "array",
+
+      "items": {
+        "$ref": "relationship.schema.json"
+      }
+
+    }
+
+  }
+}
+

@@ -27,14 +27,14 @@ Docs dog assumes the following:
 ## How to implement the documentation
 
 For **SOFTWARE REQUIREMENTS (SRS)** template it's used an adapted version of the
-great [MSRS](https://github.com/jam01/SRS-Template) that uses mardown to enable 
+great [MSRS](https://github.com/jam01/SRS-Template) that uses mardown to enable
 the documentation of requirements in plain text files. However, it is no great
-at tracking the because it's markdown format is too loose. DocDog's proposes a 
+at tracking the because it's markdown format is too loose. DocDog's proposes a
 similar template that uses YAML frontmatter in the same markdown files to manage
 tracking documentation file to their perspective implementations.
 
 For *Architechtural Decision Records (ADR's)* it's used another great template
-the [MADRS](https://adr.github.io/madr/). Once again it suffers the same problem 
+the [MADRS](https://adr.github.io/madr/). Once again it suffers the same problem
 of the previous template, and it' solved in the same exact way.
 
 ## The documentation is in place, now what?
