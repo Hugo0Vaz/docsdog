@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://docdog.dev/schema/relationship.schema.json",
-  "title": "Docdog Relationship",
+  "$id": "https://docsdog.dev/schema/relationship.schema.json",
+  "title": "Docsdog Relationship",
 
   "type": "object",
 
@@ -55,10 +55,10 @@
       "description": "URI-like identifier for an external artifact.",
 
       "examples": [
-        "docdog:usecase:UC-001",
-        "docdog:requirement:REQ-014",
-        "docdog:adr:ADR-004",
-        "docdog:event:InvoiceCreated",
+        "docsdog:usecase:UC-001",
+        "docsdog:requirement:REQ-014",
+        "docsdog:adr:ADR-004",
+        "docsdog:event:InvoiceCreated",
         "jira:ERP-123",
         "github:company/project#15"
       ],

@@ -1,8 +1,8 @@
-# DocDog
+# DocsDog
 
 ![docdoc](/assets/docdoc.png)
 
-DocDog is an open specification for expressing semantic relationships between
+DocsDog is an open specification for expressing semantic relationships between
 source code and external artifacts.
 
 It defines a language-independent metadata model that enables traceability
@@ -11,7 +11,7 @@ infrastructure, and other engineering artifacts.
 
 ## Core Model
 
-Every DocDog annotation represents a directed relationship:
+Every DocsDog annotation represents a directed relationship:
 
 ```
 Source ──Predicate──▶ Target
@@ -35,7 +35,7 @@ Targets use a three-part URI-like syntax:
 | kind       | Artifact category             |
 | identifier | Namespace-specific identifier |
 
-The specification reserves the **`docdog`** namespace with standard artifact kinds
+The specification reserves the **`docsdog`** namespace with standard artifact kinds
 (see the [full specification](docsdog-spec/specification.md)).
 
 External namespaces are also supported: `jira:issue:ERP-123`,
@@ -63,7 +63,7 @@ Each relationship may carry arbitrary key-value metadata:
 ```json
 {
   "predicate": "requires",
-  "target": "docdog:requirement:REQ-014",
+  "target": "docsdog:requirement:REQ-014",
   "metadata": {
     "since": "2.1",
     "critical": true,

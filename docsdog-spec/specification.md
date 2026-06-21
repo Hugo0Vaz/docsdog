@@ -4,25 +4,25 @@ version: 1.0.0
 draft: true
 ---
 
-# DocDog Specification
+# DocsDog Specification
 
 # 1. Introduction
 
-DocDog is an open specification for expressing semantic relationships between 
+DocsDog is an open specification for expressing semantic relationships between 
 source code and external artifacts.
 
 It defines a language-independent metadata model that enables traceability
 across software systems, documentation, architecture, requirements, APIs,
 infrastructure, and other engineering artifacts.
 
-DocDog intentionally defines only relationships.
+DocsDog intentionally defines only relationships.
 
 It does not define how relationships are discovered, indexed, stored, resolved,
 or visualized.
 
 # 2. Design Principles
 
-DocDog follows six principles.
+DocsDog follows six principles.
 
 ## Language Agnostic
 
@@ -51,11 +51,11 @@ relationship.
 
 ## Non-Intrusive
 
-DocDog must never alter program behavior.
+DocsDog must never alter program behavior.
 
 # 3. Core Model
 
-Every DocDog annotation represents a directed relationship.
+Every DocsDog annotation represents a directed relationship.
 
 ```
 Source
@@ -84,7 +84,7 @@ Every relationship consists of:
 | Field     | Required | Type              |
 | --------- | -------- | ----------------- |
 | predicate | Yes      | string            |
-| target    | Yes      | DocDog Identifier |
+| target    | Yes      | DocsDog Identifier |
 | metadata  | No       | map<string, any>  |
 
 Example:
@@ -92,11 +92,11 @@ Example:
 ```json
 {
   "predicate": "implements",
-  "target": "docdog:usecase:UC-001"
+  "target": "docsdog:usecase:UC-001"
 }
 ```
 
-# 5. DocDog Identifier
+# 5. DocsDog Identifier
 
 Targets are identified using a URI-like syntax.
 
@@ -115,7 +115,7 @@ Where:
 Example:
 
 ```
-docdog:usecase:UC-001
+docsdog:usecase:UC-001
 ```
 
 ---
@@ -125,7 +125,7 @@ docdog:usecase:UC-001
 The specification reserves the namespace:
 
 ```
-docdog
+docsdog
 ```
 
 Artifacts within this namespace have standardized meanings.
@@ -137,105 +137,105 @@ Artifacts within this namespace have standardized meanings.
 ## Requirements
 
 ```
-docdog:requirement:REQ-014
+docsdog:requirement:REQ-014
 ```
 
 ## Use Cases
 
 ```
-docdog:usecase:UC-001
+docsdog:usecase:UC-001
 ```
 
 ## User Stories
 
 ```
-docdog:userstory:US-032
+docsdog:userstory:US-032
 ```
 
 ## Business Rules
 
 ```
-docdog:rule:BR-008
+docsdog:rule:BR-008
 ```
 
 ## ADRs
 
 ```
-docdog:adr:ADR-004
+docsdog:adr:ADR-004
 ```
 
 ## Events
 
 ```
-docdog:event:InvoiceCreated
+docsdog:event:InvoiceCreated
 ```
 
 ## Commands
 
 ```
-docdog:command:CreateInvoice
+docsdog:command:CreateInvoice
 ```
 
 ## Queries
 
 ```
-docdog:query:GetInvoice
+docsdog:query:GetInvoice
 ```
 
 ## Aggregates
 
 ```
-docdog:aggregate:Invoice
+docsdog:aggregate:Invoice
 ```
 
 ## Entities
 
 ```
-docdog:entity:Customer
+docsdog:entity:Customer
 ```
 
 ## APIs
 
 ```
-docdog:api:POST:/invoices
+docsdog:api:POST:/invoices
 ```
 
 ```
-docdog:api:GET:/users/{id}
+docsdog:api:GET:/users/{id}
 ```
 
 ## Database Objects
 
 ```
-docdog:database:invoice
+docsdog:database:invoice
 
-docdog:table:users
+docsdog:table:users
 
-docdog:view:active_users
+docsdog:view:active_users
 
-docdog:index:idx_customer_email
+docsdog:index:idx_customer_email
 ```
 
 ## Infrastructure
 
 ```
-docdog:queue:payments
+docsdog:queue:payments
 
-docdog:topic:invoice-events
+docsdog:topic:invoice-events
 
-docdog:bucket:documents
+docsdog:bucket:documents
 
-docdog:lambda:process-payment
+docsdog:lambda:process-payment
 ```
 
 ## Standards
 
 ```
-docdog:rfc:RFC-9110
+docsdog:rfc:RFC-9110
 
-docdog:iso:27001
+docsdog:iso:27001
 
-docdog:soc2:CC6.1
+docsdog:soc2:CC6.1
 ```
 
 # 8. External Namespaces
@@ -347,19 +347,19 @@ Example:
 CreateInvoiceService
 
 implements
-→ docdog:usecase:UC-001
+→ docsdog:usecase:UC-001
 
 requires
-→ docdog:requirement:REQ-014
+→ docsdog:requirement:REQ-014
 
 decision
-→ docdog:adr:ADR-003
+→ docsdog:adr:ADR-003
 
 emits
-→ docdog:event:InvoiceCreated
+→ docsdog:event:InvoiceCreated
 
 persists
-→ docdog:table:invoice
+→ docsdog:table:invoice
 ```
 
 Relationships are unordered.
@@ -409,7 +409,7 @@ A compliant implementation MUST NOT:
 
 # 14. Tool Responsibilities
 
-DocDog intentionally delegates all processing.
+DocsDog intentionally delegates all processing.
 
 External tools may:
 
@@ -435,7 +435,7 @@ Relationship:
 implements
 
 Target:
-docdog:usecase:UC-001
+docsdog:usecase:UC-001
 ```
 
 Another relationship:
@@ -448,7 +448,7 @@ Relationship:
 decision
 
 Target:
-docdog:adr:ADR-004
+docsdog:adr:ADR-004
 ```
 
 Another:
@@ -461,14 +461,14 @@ Relationship:
 emits
 
 Target:
-docdog:event:InvoiceCreated
+docsdog:event:InvoiceCreated
 ```
 
 Together they describe a semantic graph that tooling can analyze independently of any programming language.
 
 # 16. Versioning
 
-Future versions of DocDog MUST preserve backward compatibility whenever possible.
+Future versions of DocsDog MUST preserve backward compatibility whenever possible.
 
 Implementations MUST ignore unknown predicates.
 
