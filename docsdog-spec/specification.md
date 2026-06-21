@@ -92,7 +92,7 @@ Example:
 ```json
 {
   "predicate": "implements",
-  "target": "DocDog:usecase:UC-001"
+  "target": "docdog:usecase:UC-001"
 }
 ```
 
@@ -115,7 +115,7 @@ Where:
 Example:
 
 ```
-DocDog:usecase:UC-001
+docdog:usecase:UC-001
 ```
 
 ---
@@ -125,7 +125,7 @@ DocDog:usecase:UC-001
 The specification reserves the namespace:
 
 ```
-DocDog
+docdog
 ```
 
 Artifacts within this namespace have standardized meanings.
@@ -137,105 +137,105 @@ Artifacts within this namespace have standardized meanings.
 ## Requirements
 
 ```
-DocDog:requirement:REQ-014
+docdog:requirement:REQ-014
 ```
 
 ## Use Cases
 
 ```
-DocDog:usecase:UC-001
+docdog:usecase:UC-001
 ```
 
 ## User Stories
 
 ```
-DocDog:userstory:US-032
+docdog:userstory:US-032
 ```
 
 ## Business Rules
 
 ```
-DocDog:rule:BR-008
+docdog:rule:BR-008
 ```
 
 ## ADRs
 
 ```
-DocDog:adr:ADR-004
+docdog:adr:ADR-004
 ```
 
 ## Events
 
 ```
-DocDog:event:InvoiceCreated
+docdog:event:InvoiceCreated
 ```
 
 ## Commands
 
 ```
-DocDog:command:CreateInvoice
+docdog:command:CreateInvoice
 ```
 
 ## Queries
 
 ```
-DocDog:query:GetInvoice
+docdog:query:GetInvoice
 ```
 
 ## Aggregates
 
 ```
-DocDog:aggregate:Invoice
+docdog:aggregate:Invoice
 ```
 
 ## Entities
 
 ```
-DocDog:entity:Customer
+docdog:entity:Customer
 ```
 
 ## APIs
 
 ```
-DocDog:api:POST:/invoices
+docdog:api:POST:/invoices
 ```
 
 ```
-DocDog:api:GET:/users/{id}
+docdog:api:GET:/users/{id}
 ```
 
 ## Database Objects
 
 ```
-DocDog:database:invoice
+docdog:database:invoice
 
-DocDog:table:users
+docdog:table:users
 
-DocDog:view:active_users
+docdog:view:active_users
 
-DocDog:index:idx_customer_email
+docdog:index:idx_customer_email
 ```
 
 ## Infrastructure
 
 ```
-DocDog:queue:payments
+docdog:queue:payments
 
-DocDog:topic:invoice-events
+docdog:topic:invoice-events
 
-DocDog:bucket:documents
+docdog:bucket:documents
 
-DocDog:lambda:process-payment
+docdog:lambda:process-payment
 ```
 
 ## Standards
 
 ```
-DocDog:rfc:RFC-9110
+docdog:rfc:RFC-9110
 
-DocDog:iso:27001
+docdog:iso:27001
 
-DocDog:soc2:CC6.1
+docdog:soc2:CC6.1
 ```
 
 # 8. External Namespaces
@@ -347,19 +347,19 @@ Example:
 CreateInvoiceService
 
 implements
-→ DocDog:usecase:UC-001
+→ docdog:usecase:UC-001
 
 requires
-→ DocDog:requirement:REQ-014
+→ docdog:requirement:REQ-014
 
 decision
-→ DocDog:adr:ADR-003
+→ docdog:adr:ADR-003
 
 emits
-→ DocDog:event:InvoiceCreated
+→ docdog:event:InvoiceCreated
 
 persists
-→ DocDog:table:invoice
+→ docdog:table:invoice
 ```
 
 Relationships are unordered.
@@ -435,7 +435,7 @@ Relationship:
 implements
 
 Target:
-DocDog:usecase:UC-001
+docdog:usecase:UC-001
 ```
 
 Another relationship:
@@ -448,7 +448,7 @@ Relationship:
 decision
 
 Target:
-DocDog:adr:ADR-004
+docdog:adr:ADR-004
 ```
 
 Another:
@@ -461,7 +461,7 @@ Relationship:
 emits
 
 Target:
-DocDog:event:InvoiceCreated
+docdog:event:InvoiceCreated
 ```
 
 Together they describe a semantic graph that tooling can analyze independently of any programming language.

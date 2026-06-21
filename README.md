@@ -1,80 +1,99 @@
-# Docs Dog
+# DocDog
 
-Docs Dog is a opinionated project documentation tool. It aims to provide an easy
-way to link project documentation and implementation.
+DocDog is an open specification for expressing semantic relationships between
+source code and external artifacts.
 
-## QuickStart
+It defines a language-independent metadata model that enables traceability
+across software systems, documentation, architecture, requirements, APIs,
+infrastructure, and other engineering artifacts.
 
-1. Install docdog program.
-2. Create a doc.
-3. Track your Use Cases, Requirements implementation in code.
-4. Generate the report.
+## Core Model
 
-Docs dog assumes the following:
-- Requirements are elicited using *User Stories*.
-- The user stories are translated to *Use Cases*.
-- The language used is amongst the following (to be expanded...):
-    - PHP
-- Requirements are of type:
-    - Functional: what the system shall do
-    - Performance: how well the system must perform
-    - Interface: how the system interacts with external systems
-    - Operational: conditions during normal and degraded operation
-    - Constraints: design limitations (regulatory, physical, technology choices)
-    - Verification: how requirements will be confirmed as met
-    - Quality: reliability, maintainability, security, and similar "-ilities"
+Every DocDog annotation represents a directed relationship:
 
-## How to implement the documentation
+```
+Source ──Predicate──▶ Target
+```
 
-For **SOFTWARE REQUIREMENTS (SRS)** template it's used an adapted version of the
-great [MSRS](https://github.com/jam01/SRS-Template) that uses mardown to enable
-the documentation of requirements in plain text files. However, it is no great
-at tracking the because it's markdown format is too loose. DocDog's proposes a
-similar template that uses YAML frontmatter in the same markdown files to manage
-tracking documentation file to their perspective implementations.
+- **Source**: a code element (class, method, function, interface, trait, enum, module, …).
+- **Predicate**: the semantic meaning of the link.
+- **Target**: an external artifact identified by a URI-like string.
 
-For *Architechtural Decision Records (ADR's)* it's used another great template
-the [MADRS](https://adr.github.io/madr/). Once again it suffers the same problem
-of the previous template, and it' solved in the same exact way.
+## Identifier Format
 
-## The documentation is in place, now what?
+Targets use a three-part URI-like syntax:
 
-Now you follow the guide for you language on how to tag, your implementations to
-the documentation.
+```
+<namespace>:<kind>:<identifier>
+```
 
-DocDog implements in each language construct the following tags:
-- UseCase
-- Requirement
-- Decision
-- Architecture
-- ApiContract
+| Component  | Description                   |
+| ---------- | ----------------------------- |
+| namespace  | Registry owner                |
+| kind       | Artifact category             |
+| identifier | Namespace-specific identifier |
 
-For each tag is passed and ID that matches the ID of the documentation document.
+The specification reserves the **`docdog`** namespace with standard artifact kinds
+(see the [full specification](docsdog-spec/specification.md)).
 
-### PHP
+External namespaces are also supported: `jira:issue:ERP-123`,
+`github:repo:company/project#15`, `openapi:spec:billing:v1`, etc.
 
-1. Install the library `composer require docdog/php`
+## Standard Predicates
 
-2. Tag your implementations.
+| Category        | Predicates                                            |
+|-----------------|-------------------------------------------------------|
+| Traceability    | `implements`, `traces-to`, `requires`, `validates`, `tests` |
+| Architecture    | `depends-on`, `owned-by`, `decision`, `replaces`, `deprecated-by` |
+| Messaging       | `emits`, `consumes`                                   |
+| Persistence     | `persists`, `maps-to`                                 |
+| API             | `exposes`                                             |
+| Security        | `authenticated-by`, `authorized-by`, `secured-by`     |
+| Configuration   | `configured-by`, `feature-flag`                       |
 
-```php
-use DocRef\Attributes\UseCase;
-use DocRef\Attributes\Requirement;
+Custom predicates are supported. Unknown predicates MUST be accepted by
+compliant implementations.
 
-#[UseCase("UC-001")]
-#[Requirement("REQ-145")]
-class CreateInvoice
+## Optional Metadata
+
+Each relationship may carry arbitrary key-value metadata:
+
+```json
 {
-    public function execute() {}
+  "predicate": "requires",
+  "target": "docdog:requirement:REQ-014",
+  "metadata": {
+    "since": "2.1",
+    "critical": true,
+    "tags": ["payments", "security"]
+  }
 }
 ```
 
-## I've added all the documentation and implementation tagging, I want my graph!
+## Design Principles
 
-Now that all tagging and documentation is added there's a few options to check.
+- **Language Agnostic** — independent of any programming language.
+- **Storage Agnostic** — targets identify artifacts, not locations.
+- **Semantic** — relationships describe meaning, not implementation.
+- **Extensible** — new predicates and namespaces without modifying the spec.
+- **Minimal** — only the minimum to express a relationship.
+- **Non-Intrusive** — must never alter program behavior.
 
-1. `docdog check`: runs all docdog's checks.
-2. `docdog check uc`: checks what use cases are missing implementation or tests.
-3. `docdog check rq`: checks what reqs are missing implementation or tests.
-4. `docdog check tests`: check what tests are missing implementations.
-5. `docdog dt`: creates a map of the dependendcy tree between usecases and reqs.
+## Implementations
+
+| Language   | Package                                                         |
+|------------|-----------------------------------------------------------------|
+| PHP        | [docsdog/docsdog-php](docsdog-php/)                             |
+
+Language-specific docs (installation, annotation syntax, CLI usage) live in each
+implementation's own README.
+
+## Specification
+
+The formal specification is at [docsdog-spec/specification.md](docsdog-spec/specification.md).
+
+JSON schemas:
+
+- [Scan document](docsdog-spec/scan.schema.json) — top-level container.
+- [Relationship](docsdog-spec/relationship.schema.json) — individual edge.
+- [Scan example](docsdog-spec/scan-example.json) — complete example output.
