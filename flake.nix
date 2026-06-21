@@ -67,11 +67,12 @@
               ];
 
               shellHook = ''
-                # Prepare docs directory with symlinks to spec files
+                # Prepare docs directory with symlinks to spec files and assets
                 ln -sf ../docsdog-spec/specification.md docs/specification.md
                 ln -sf ../docsdog-spec/scan.schema.json docs/scan.schema.json
                 ln -sf ../docsdog-spec/relationship.schema.json docs/relationship.schema.json
                 ln -sf ../docsdog-spec/scan-example.json docs/scan-example.json
+                ln -sf ../assets docs/assets
 
                 echo "🐕   Docs Dog — Documentation Environment"
                 echo "      mkdocs:   $(mkdocs --version)"
@@ -92,14 +93,14 @@
               mkdocsWithMaterial
             ];
 
-            preBuild = ''
+            buildPhase = ''
+              # Copy external files into docs/ so mkdocs can find them
               cp docsdog-spec/specification.md docs/
               cp docsdog-spec/scan.schema.json docs/
               cp docsdog-spec/relationship.schema.json docs/
               cp docsdog-spec/scan-example.json docs/
-            '';
+              cp -r assets docs/
 
-            buildPhase = ''
               mkdocs build --strict --site-dir $out
             '';
 

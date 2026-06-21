@@ -1,6 +1,6 @@
 # DocsDog
 
-![docdoc](../assets/docdoc.png)
+![docdoc](assets/docdoc.png)
 
 DocsDog is an open specification for expressing semantic relationships between
 source code and external artifacts.
