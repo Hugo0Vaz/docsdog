@@ -26,6 +26,9 @@ Because the docsdog's SPT model specification intentionally does not provide the
 language implementations and focuses only on defining guardrails of how the
 system should work, contributors are free to implement the models in any language.
 
+- [Documentation](./docsdog-spec/README.md)
+- [Specification](./docsdog-spec/specification.md)
+
 ## Implementations
 
 | Language | Repo                                                         |
