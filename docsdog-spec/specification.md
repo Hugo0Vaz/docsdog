@@ -8,7 +8,7 @@ draft: true
 
 # 1. Introduction
 
-DocsDog is an open specification for expressing semantic relationships between 
+DocsDog is an open specification for expressing semantic relationships between
 source code and external artifacts.
 
 It defines a language-independent metadata model that enables traceability
