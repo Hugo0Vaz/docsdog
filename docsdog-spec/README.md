@@ -25,7 +25,7 @@ Targets use a three-part URI-like syntax:
 | identifier | Namespace-specific identifier |
 
 The specification reserves the **`docsdog`** namespace with standard artifact kinds
-(see the [full specification](docsdog-spec/specification.md)).
+(see the [full specification](specification.md)).
 
 External namespaces are also supported: `jira:issue:ERP-123`,
 `github:repo:company/project#15`, `openapi:spec:billing:v1`, etc.
@@ -76,10 +76,10 @@ implementation's own repository.
 
 ## Specification
 
-The formal specification is at [docsdog-spec/specification.md](docsdog-spec/specification.md).
+The formal specification is at [specification.md](specification.md).
 
 JSON schemas:
 
-- [Scan document](docsdog-spec/scan.schema.json) — top-level container.
-- [Relationship](docsdog-spec/relationship.schema.json) — individual edge.
-- [Scan example](docsdog-spec/scan-example.json) — complete example output.
+- [Scan document](scan.schema.json) — top-level container.
+- [Relationship](relationship.schema.json) — individual edge.
+- [Scan example](scan-example.json) — complete example output.

@@ -1,7 +1,6 @@
 ---
 author: Hugo0Vaz
-version: 1.0.0
-draft: true
+version: 0.1.0
 ---
 
 # DocsDog Specification
@@ -73,24 +72,25 @@ Where:
 * Predicate defines the semantic meaning.
 * Target identifies another artifact.
 
-The source is implicit.
-
-Only the predicate and target are mandatory.
+The source is mandatory in the scan document but SHOULD be inferred
+automatically by language implementations from the annotated code element.
 
 # 4. Relationship
 
 Every relationship consists of:
 
-| Field     | Required | Type              |
-| --------- | -------- | ----------------- |
-| predicate | Yes      | string            |
-| target    | Yes      | DocsDog Identifier |
-| metadata  | No       | map<string, any>  |
+| Field     | Required | Type                |
+| --------- | -------- | ------------------- |
+| source    | Yes      | Source Identifier   |
+| predicate | Yes      | string              |
+| target    | Yes      | DocsDog Identifier  |
+| metadata  | No       | map<string, any>    |
 
 Example:
 
 ```json
 {
+  "source": "php://src/Application/CreateInvoiceService.php#L12",
   "predicate": "implements",
   "target": "docsdog:usecase:UC-001"
 }
@@ -318,6 +318,9 @@ The following predicates are standardized.
 Unknown predicates MUST be accepted.
 
 # 10. Metadata
+
+Metadata is optional. Schema-level validation of metadata is not yet
+enforced; it may be added once the corresponding test suite is in place.
 
 Metadata is implementation-defined.
 
