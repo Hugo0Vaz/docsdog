@@ -23,54 +23,36 @@
           ]);
         in
         {
-          devShells = {
-            # Documentation shell (root of the repo)
-            default = pkgs.mkShell {
-            name = "docsdog-docs";
+          devShells.default = pkgs.mkShell {
+            name = "docsdog";
 
             buildInputs = [
               mkdocsWithMaterial
+              pkgs.cargo
+              pkgs.rustc
+              pkgs.rustfmt
+              pkgs.clippy
+              pkgs.rust-analyzer
             ];
 
             shellHook = ''
-              echo "🐕   Docs Dog — Documentation Environment"
+              echo "🐕   Docs Dog"
+              echo "      rustc:    $(rustc --version)"
+              echo "      cargo:    $(cargo --version)"
               echo "      mkdocs:   $(mkdocs --version)"
               echo ""
-              echo "  Commands:"
+              echo "  docsdog-cli:"
+              echo "    cargo build       Build the project"
+              echo "    cargo run         Run the CLI"
+              echo "    cargo test        Run tests"
+              echo "    cargo fmt         Format code"
+              echo "    cargo clippy      Lint code"
+              echo ""
+              echo "  docs:"
               echo "    mkdocs serve -f mkdocs/mkdocs.yml    Start live-reloading docs server"
               echo "    mkdocs build -f mkdocs/mkdocs.yml    Build static site"
               echo ""
-              echo "  Source files (docsdog-spec/*, assets/*) are copied into the"
-              echo "  docs dir at build time by the mkdocs-gen-files plugin."
-              echo ""
             '';
-          };
-
-            # Cargo / Rust CLI shell (docsdog-cli/ directory)
-            cli = pkgs.mkShell {
-              name = "docsdog-cli";
-
-              buildInputs = [
-                pkgs.cargo
-                pkgs.rustc
-                pkgs.rustfmt
-                pkgs.clippy
-              ];
-
-              shellHook = ''
-                echo "🐕   Docs Dog — Rust CLI Environment"
-                echo "      rustc:    $(rustc --version)"
-                echo "      cargo:    $(cargo --version)"
-                echo ""
-                echo "  Commands:"
-                echo "    cargo build       Build the project"
-                echo "    cargo run         Run the CLI"
-                echo "    cargo test        Run tests"
-                echo "    cargo fmt         Format code"
-                echo "    cargo clippy      Lint code"
-                echo ""
-              '';
-            };
           };
 
           packages.docs = pkgs.stdenv.mkDerivation {
