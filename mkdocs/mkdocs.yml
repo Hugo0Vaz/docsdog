@@ -52,3 +52,6 @@ nav:
 
 plugins:
   - search
+  - gen-files:
+      scripts:
+        - gen_docs.py

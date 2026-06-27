@@ -1,2 +1,15 @@
 result/
 result
+
+# Python (uv / virtualenv)
+.venv/
+
+# direnv
+.direnv/
+
+# MkDocs generated files (managed by mkdocs-gen-files plugin)
+mkdocs/docs/assets/
+mkdocs/docs/specification.md
+mkdocs/docs/scan.schema.json
+mkdocs/docs/relationship.schema.json
+mkdocs/docs/scan-example.json

@@ -1,1 +1,0 @@
-../../docsdog-spec/specification.md
