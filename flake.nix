@@ -21,10 +21,6 @@
             ps.mkdocs-material
             ps.mkdocs-gen-files
           ]);
-
-          pythonDevShell = import ./docsdog-cli/python-dev-shell.nix {
-            inherit pkgs system;
-          };
         in
         {
           devShells = {
@@ -50,8 +46,31 @@
             '';
           };
 
-            # Python CLI shell (docsdog-cli/ directory)
-            cli = pythonDevShell;
+            # Cargo / Rust CLI shell (docsdog-cli/ directory)
+            cli = pkgs.mkShell {
+              name = "docsdog-cli";
+
+              buildInputs = [
+                pkgs.cargo
+                pkgs.rustc
+                pkgs.rustfmt
+                pkgs.clippy
+              ];
+
+              shellHook = ''
+                echo "🐕   Docs Dog — Rust CLI Environment"
+                echo "      rustc:    $(rustc --version)"
+                echo "      cargo:    $(cargo --version)"
+                echo ""
+                echo "  Commands:"
+                echo "    cargo build       Build the project"
+                echo "    cargo run         Run the CLI"
+                echo "    cargo test        Run tests"
+                echo "    cargo fmt         Format code"
+                echo "    cargo clippy      Lint code"
+                echo ""
+              '';
+            };
           };
 
           packages.docs = pkgs.stdenv.mkDerivation {
