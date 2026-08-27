@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use std::fs;
 use std::path::{Path, PathBuf};
 
-// ─── CLI definition ────────────────────────────────────────────────
+// ── CLI definition ───────────────────────────────────────────────
 
 /// Scaffold and generate documentation templates for your project.
 #[derive(Parser)]
@@ -19,6 +19,9 @@ enum Commands {
         /// Use bare (placeholder-only) templates for index documents.
         #[arg(long, default_value_t = false)]
         bare: bool,
+        /// Template language (e.g. "en", "pt-br").
+        #[arg(long, default_value = "en")]
+        lang: String,
     },
     /// Generate a new tracked document from a template.
     #[command(subcommand)]
@@ -35,6 +38,9 @@ enum MakeTarget {
         /// Use minimal template (fewer sections).
         #[arg(long, default_value_t = false)]
         minimal: bool,
+        /// Template language (e.g. "en", "pt-br").
+        #[arg(long, default_value = "en")]
+        lang: String,
     },
     /// Generate a Requirement.
     Req {
@@ -44,6 +50,9 @@ enum MakeTarget {
         /// Use minimal template (fewer sections).
         #[arg(long, default_value_t = false)]
         minimal: bool,
+        /// Template language (e.g. "en", "pt-br").
+        #[arg(long, default_value = "en")]
+        lang: String,
     },
     /// Generate a Use Case.
     Uc {
@@ -53,6 +62,9 @@ enum MakeTarget {
         /// Use minimal template (UML Simplified instead of Cockburn).
         #[arg(long, default_value_t = false)]
         minimal: bool,
+        /// Template language (e.g. "en", "pt-br").
+        #[arg(long, default_value = "en")]
+        lang: String,
     },
     /// Generate a User Story.
     Us {
@@ -62,10 +74,13 @@ enum MakeTarget {
         /// Use minimal template (fewer sections).
         #[arg(long, default_value_t = false)]
         minimal: bool,
+        /// Template language (e.g. "en", "pt-br").
+        #[arg(long, default_value = "en")]
+        lang: String,
     },
 }
 
-// ─── Document type metadata ────────────────────────────────────────
+// ── Document type metadata ────────────────────────────────────────
 
 /// Metadata for each tracked document type.
 struct DocType {
@@ -84,46 +99,88 @@ const REQ: DocType = DocType { label: "req", dir: "req", prefix: "REQ", has_mini
 const UC:  DocType = DocType { label: "uc",  dir: "uc",  prefix: "UC",  has_minimal: true };
 const US:  DocType = DocType { label: "us",  dir: "us",  prefix: "US",  has_minimal: false };
 
-// ─── Template lookup ───────────────────────────────────────────────
+// ── Template lookup ───────────────────────────────────────────────
 
 /// Returns the content of the individual (tracked) template for a document type
 /// and flag combination. Returns `None` if the variant doesn't exist.
-fn get_make_template(doc: &DocType, bare: bool, minimal: bool) -> Option<&'static str> {
-    use DocTypeKind::*;
-    let kind = match doc.label {
-        "adr" => Adr,
-        "req" => Req,
-        "uc"  => Uc,
-        "us"  => Us,
-        _ => unreachable!(),
-    };
-    match (kind, bare, minimal) {
-        // ADR — all 4 variants
-        (Adr, false, false) => Some(include_str!("templates/en/adr/adr-template.md")),
-        (Adr, true,  false) => Some(include_str!("templates/en/adr/adr-template-bare.md")),
-        (Adr, false, true ) => Some(include_str!("templates/en/adr/adr-template-minimal.md")),
-        (Adr, true,  true ) => Some(include_str!("templates/en/adr/adr-template-bare-minimal.md")),
-        // REQ — full + bare only
-        (Req, false, false) => Some(include_str!("templates/en/srs/req-template.md")),
-        (Req, true,  false) => Some(include_str!("templates/en/srs/req-template-bare.md")),
-        (Req, _,     true ) => None,
-        // UC — all 4 variants
-        (Uc,  false, false) => Some(include_str!("templates/en/ucs/uc-template.md")),
-        (Uc,  true,  false) => Some(include_str!("templates/en/ucs/uc-template-bare.md")),
-        (Uc,  false, true ) => Some(include_str!("templates/en/ucs/uc-template-minimal.md")),
-        (Uc,  true,  true ) => Some(include_str!("templates/en/ucs/uc-template-bare-minimal.md")),
-        // US — full + bare only
-        (Us,  false, false) => Some(include_str!("templates/en/us/us-template.md")),
-        (Us,  true,  false) => Some(include_str!("templates/en/us/us-template-bare.md")),
-        (Us,  _,     true ) => None,
+fn get_make_template(doc: &DocType, bare: bool, minimal: bool, lang: &str) -> Option<&'static str> {
+    match lang {
+        "en" => get_make_template_en(doc, bare, minimal),
+        "pt-br" => get_make_template_ptbr(doc, bare, minimal),
+        _ => {
+            eprintln!("Error: unsupported language '{}'. Supported: en, pt-br.", lang);
+            std::process::exit(1);
+        }
     }
 }
 
-/// Lookup discriminant (not public).
-enum DocTypeKind { Adr, Req, Uc, Us }
+fn get_make_template_en(doc: &DocType, bare: bool, minimal: bool) -> Option<&'static str> {
+    enum DocTypeKind { Adr, Req, Uc, Us }
+    let kind = match doc.label {
+        "adr" => DocTypeKind::Adr,
+        "req" => DocTypeKind::Req,
+        "uc"  => DocTypeKind::Uc,
+        "us"  => DocTypeKind::Us,
+        _ => unreachable!(),
+    };
+    match (kind, bare, minimal) {
+        (DocTypeKind::Adr, false, false) => Some(include_str!("templates/en/adr/adr-template.md")),
+        (DocTypeKind::Adr, true,  false) => Some(include_str!("templates/en/adr/adr-template-bare.md")),
+        (DocTypeKind::Adr, false, true ) => Some(include_str!("templates/en/adr/adr-template-minimal.md")),
+        (DocTypeKind::Adr, true,  true ) => Some(include_str!("templates/en/adr/adr-template-bare-minimal.md")),
+        (DocTypeKind::Req, false, false) => Some(include_str!("templates/en/srs/req-template.md")),
+        (DocTypeKind::Req, true,  false) => Some(include_str!("templates/en/srs/req-template-bare.md")),
+        (DocTypeKind::Req, _,     true ) => None,
+        (DocTypeKind::Uc,  false, false) => Some(include_str!("templates/en/ucs/uc-template.md")),
+        (DocTypeKind::Uc,  true,  false) => Some(include_str!("templates/en/ucs/uc-template-bare.md")),
+        (DocTypeKind::Uc,  false, true ) => Some(include_str!("templates/en/ucs/uc-template-minimal.md")),
+        (DocTypeKind::Uc,  true,  true ) => Some(include_str!("templates/en/ucs/uc-template-bare-minimal.md")),
+        (DocTypeKind::Us,  false, false) => Some(include_str!("templates/en/us/us-template.md")),
+        (DocTypeKind::Us,  true,  false) => Some(include_str!("templates/en/us/us-template-bare.md")),
+        (DocTypeKind::Us,  _,     true ) => None,
+    }
+}
+
+fn get_make_template_ptbr(doc: &DocType, bare: bool, minimal: bool) -> Option<&'static str> {
+    enum DocTypeKind { Adr, Req, Uc, Us }
+    let kind = match doc.label {
+        "adr" => DocTypeKind::Adr,
+        "req" => DocTypeKind::Req,
+        "uc"  => DocTypeKind::Uc,
+        "us"  => DocTypeKind::Us,
+        _ => unreachable!(),
+    };
+    match (kind, bare, minimal) {
+        (DocTypeKind::Adr, false, false) => Some(include_str!("templates/pt-br/adr/adr-template.md")),
+        (DocTypeKind::Adr, true,  false) => Some(include_str!("templates/pt-br/adr/adr-template-bare.md")),
+        (DocTypeKind::Adr, false, true ) => Some(include_str!("templates/pt-br/adr/adr-template-minimal.md")),
+        (DocTypeKind::Adr, true,  true ) => Some(include_str!("templates/pt-br/adr/adr-template-bare-minimal.md")),
+        (DocTypeKind::Req, false, false) => Some(include_str!("templates/pt-br/srs/req-template.md")),
+        (DocTypeKind::Req, true,  false) => Some(include_str!("templates/pt-br/srs/req-template-bare.md")),
+        (DocTypeKind::Req, _,     true ) => None,
+        (DocTypeKind::Uc,  false, false) => Some(include_str!("templates/pt-br/ucs/uc-template.md")),
+        (DocTypeKind::Uc,  true,  false) => Some(include_str!("templates/pt-br/ucs/uc-template-bare.md")),
+        (DocTypeKind::Uc,  false, true ) => Some(include_str!("templates/pt-br/ucs/uc-template-minimal.md")),
+        (DocTypeKind::Uc,  true,  true ) => Some(include_str!("templates/pt-br/ucs/uc-template-bare-minimal.md")),
+        (DocTypeKind::Us,  false, false) => Some(include_str!("templates/pt-br/us/us-template.md")),
+        (DocTypeKind::Us,  true,  false) => Some(include_str!("templates/pt-br/us/us-template-bare.md")),
+        (DocTypeKind::Us,  _,     true ) => None,
+    }
+}
 
 /// Returns the content of an index (container) template for `dir` and flag.
-fn get_init_template(dir: &str, bare: bool) -> &'static str {
+fn get_init_template(dir: &str, bare: bool, lang: &str) -> &'static str {
+    match lang {
+        "en" => get_init_template_en(dir, bare),
+        "pt-br" => get_init_template_ptbr(dir, bare),
+        _ => {
+            eprintln!("Error: unsupported language '{}'. Supported: en, pt-br.", lang);
+            std::process::exit(1);
+        }
+    }
+}
+
+fn get_init_template_en(dir: &str, bare: bool) -> &'static str {
     match (dir, bare) {
         ("adr", false) => include_str!("templates/en/adr/adrs-template.md"),
         ("adr", true)  => include_str!("templates/en/adr/adrs-template-bare.md"),
@@ -137,6 +194,20 @@ fn get_init_template(dir: &str, bare: bool) -> &'static str {
     }
 }
 
+fn get_init_template_ptbr(dir: &str, bare: bool) -> &'static str {
+    match (dir, bare) {
+        ("adr", false) => include_str!("templates/pt-br/adr/adrs-template.md"),
+        ("adr", true)  => include_str!("templates/pt-br/adr/adrs-template-bare.md"),
+        ("req", false) => include_str!("templates/pt-br/srs/srs-template.md"),
+        ("req", true)  => include_str!("templates/pt-br/srs/srs-template-bare.md"),
+        ("uc",  false) => include_str!("templates/pt-br/ucs/ucs-template.md"),
+        ("uc",  true)  => include_str!("templates/pt-br/ucs/ucs-template-bare.md"),
+        ("us",  false) => include_str!("templates/pt-br/us/uss-template.md"),
+        ("us",  true)  => include_str!("templates/pt-br/us/uss-template-bare.md"),
+        _ => unreachable!(),
+    }
+}
+
 /// Each init entry: (directory under docs/, name of the index file inside it).
 const INIT_ENTRIES: &[(&str, &str)] = &[
     ("adr", "adrs.md"),
@@ -145,7 +216,7 @@ const INIT_ENTRIES: &[(&str, &str)] = &[
     ("us",  "uss.md"),
 ];
 
-// ─── Numbering ─────────────────────────────────────────────────────
+// ── Numbering ─────────────────────────────────────────────────────
 
 /// Scan `dir` for files matching `PREFIX-NNN.md` and return max NNN + 1.
 /// Returns 1 if no matching files exist or the directory doesn't exist.
@@ -167,9 +238,9 @@ fn next_number(dir: &Path, prefix: &str) -> u32 {
     max + 1
 }
 
-// ─── Commands ──────────────────────────────────────────────────────
+// ── Commands ──────────────────────────────────────────────────────
 
-fn cmd_init(bare: bool) {
+fn cmd_init(bare: bool, lang: &str) {
     let base = docs_dir();
     for (dir, file) in INIT_ENTRIES {
         let dir_path = base.join(dir);
@@ -177,7 +248,7 @@ fn cmd_init(bare: bool) {
             eprintln!("Error: could not create directory docs/{}: {e}", dir);
             std::process::exit(1);
         });
-        let template = get_init_template(dir, bare);
+        let template = get_init_template(dir, bare, lang);
         let dest = dir_path.join(file);
         fs::write(&dest, template).unwrap_or_else(|e| {
             eprintln!("Error: could not write docs/{dir}/{file}: {e}");
@@ -187,7 +258,7 @@ fn cmd_init(bare: bool) {
     }
 }
 
-fn cmd_make(doc: &DocType, bare: bool, minimal: bool) {
+fn cmd_make(doc: &DocType, bare: bool, minimal: bool, lang: &str) {
     // Validate flag availability
     if minimal && !doc.has_minimal {
         eprintln!(
@@ -197,7 +268,7 @@ fn cmd_make(doc: &DocType, bare: bool, minimal: bool) {
         std::process::exit(1);
     }
 
-    let template = get_make_template(doc, bare, minimal)
+    let template = get_make_template(doc, bare, minimal, lang)
         .expect("template should exist after validation");
 
     let dir_path = docs_dir().join(doc.dir);
@@ -224,17 +295,17 @@ fn docs_dir() -> PathBuf {
     .join("docs")
 }
 
-// ─── Entry point ───────────────────────────────────────────────────
+// ── Entry point ───────────────────────────────────────────────────
 
 fn main() {
     let cli = Cli::parse();
     match cli.command {
-        Commands::Init { bare } => cmd_init(bare),
+        Commands::Init { bare, lang } => cmd_init(bare, &lang),
         Commands::Make(target) => match target {
-            MakeTarget::Adr { bare, minimal } => cmd_make(&ADR, bare, minimal),
-            MakeTarget::Req { bare, minimal } => cmd_make(&REQ, bare, minimal),
-            MakeTarget::Uc  { bare, minimal } => cmd_make(&UC,  bare, minimal),
-            MakeTarget::Us  { bare, minimal } => cmd_make(&US,  bare, minimal),
+            MakeTarget::Adr { bare, minimal, lang } => cmd_make(&ADR, bare, minimal, &lang),
+            MakeTarget::Req { bare, minimal, lang } => cmd_make(&REQ, bare, minimal, &lang),
+            MakeTarget::Uc  { bare, minimal, lang } => cmd_make(&UC,  bare, minimal, &lang),
+            MakeTarget::Us  { bare, minimal, lang } => cmd_make(&US,  bare, minimal, &lang),
         },
     }
 }

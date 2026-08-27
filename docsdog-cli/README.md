@@ -75,7 +75,7 @@ does not cause the next generated file to reuse that number).
 ### `docsdog init`
 
 ```
-docsdog init [--bare]
+docsdog init [--bare] [--lang <LANG>]
 ```
 
 Creates the `docs/` directory with four subdirectories (`adr`, `req`, `uc`,
@@ -85,11 +85,12 @@ Creates the `docs/` directory with four subdirectories (`adr`, `req`, `uc`,
 |------|--------|
 | (none) | Full index templates with guidance comments (💬) and tips (💡) |
 | `--bare` | Bare index templates — placeholders only, no guidance |
+| `--lang <LANG>` | Template language (default: `en`). Supported: `en`, `pt-br` |
 
 ### `docsdog make`
 
 ```
-docsdog make <TYPE> [--bare] [--minimal]
+docsdog make <TYPE> [--bare] [--minimal] [--lang <LANG>]
 ```
 
 Generates a new tracked document of the given type with an auto-incremented ID.
@@ -101,6 +102,7 @@ Generates a new tracked document of the given type with an auto-incremented ID.
 | (none) | Full template with guidance comments and tips |
 | `--bare` | Bare template — placeholders only |
 | `--minimal` | Minimal template — fewer/simpler sections |
+| `--lang <LANG>` | Template language (default: `en`). Supported: `en`, `pt-br` |
 
 Both flags can be combined (`--bare --minimal`).
 
